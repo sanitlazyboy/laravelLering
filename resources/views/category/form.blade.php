@@ -6,7 +6,7 @@
 @enderror
 </div>
 <div class="mb-3">
-  <label for="exampleInputPassword1" class="form-label">Password</label>
+  <label for="exampleInputPassword1" class="form-label">Image</label>
   <input type="file" name="image" class="form-control" id="exampleInputPassword1">
   @isset($data)      
   <img src="{{Storage::disk('public')->url('upload/'.$data->image)}}" width="50px" height="50px" />
