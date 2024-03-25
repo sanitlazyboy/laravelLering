@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +27,5 @@ Route::get('/', function () {
 // Route::put('categories/{category}', [CategoryController::class, 'edit'])->name('category.edit');
 // Route::get("categories/{category}", [CategoryController::class, 'show'])->name('category.show');
 
-
 Route::resource('categories', CategoryController::class);
+Route::resource('products', ProductController::class);

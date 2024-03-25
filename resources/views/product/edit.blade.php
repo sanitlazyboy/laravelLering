@@ -18,14 +18,14 @@
     {{-- <form method="POST" action="{{route('categories.update',['category'=>$data->id])}}" enctype="multipart/form-data">
       @csrf --}}
 
-      {!! Form::open(array('route' => array('categories.update', $data->id),
+      {!! Form::open(array('route' => array('products.update', $data->id),
           'method'=>'post',
           'files'=>true
         )) !!}
 
             {{-- @method('PUT') --}}
             <input type="hidden" name="_method" value="put">
-            @include('category.form')
+            @include('product.form')
 
       {!! Form::close() !!}
       {{-- </form> --}}

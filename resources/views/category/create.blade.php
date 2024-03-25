@@ -13,9 +13,28 @@
         </ul>
     </div>
 @endif
-    <form method="POST" action="{{url('categories')}}" enctype="multipart/form-data">
-      @csrf
+    {{-- <form method="POST" action="{{url('categories')}}" enctype="multipart/form-data">
+      @csrf --}}
+      {{-- {!! Form::open(array(
+        'url' => 'categories',
+        'method'=>'post',
+        'enctype'=>'multipart/form-data'
+        // 'files'=>true
+
+        )) !!} --}}
+
+        {!! Form::open(array(
+            'route' => 'categories.index',
+            'method'=>'post',
+            'enctype'=>'multipart/form-data'
+            // 'files'=>true
+            ))
+            !!}
+
       @include('category.form')
-    </form>
+
+      {!! Form::close() !!}
+
+    {{-- </form> --}}
 </div>
 @endsection

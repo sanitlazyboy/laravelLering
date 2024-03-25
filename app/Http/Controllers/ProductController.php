@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\ProductRequest;
+use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +19,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::all();
-        return view('category.index', ["title"=>"Category list", 'data' =>$category]);
+        // $category = Product::find(1)->category;
+        // return $this->hasOne(Product::class, 'category_id');
+        // dd($category);
+        // $category = Category::all();
+        // $product = Product::with('category')->first();
+        // dd($product->toArray());
+        $product = Product::with('category')->get();
+        // dd($product);
+        return view('product.index', ["title"=>"Product list", 'data' =>$product]);
     }
 
     /**
@@ -29,8 +37,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.create');
-
+        $categories  = Category::all()->pluck('category_name','id');
+        return view('product.create', compact('categories'));
     }
 
     /**
@@ -39,28 +47,24 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(ProductRequest $request)
     {
         $input  = $request->all();
-        // $file_name = $request->photo->store('images');
-
-        $file = $request->file('image'); // Retrieve the uploaded file from the request
-        $file_name = $file->getClientOriginalName(); // Retrieve the original file_name
-
-        Storage::disk('public')->put('upload/'.$file_name, file_get_contents($file));
-        $input['image']= $file_name;
-        $input['status']= 1;
+        // $input['category_id']= 1;
+        // $input['product_name']= 1;
+        // $input['color']= 1;
+        // $input['quantity']= 1;
+        // $input['status']= 1;
 
         try{
             // Category::create(['category_name'=>$input['category_name'], 'image'=> $file_name, 'status'=>1]);
-            Category::create($input);
+            Product::create($input);
         }catch(Exception $e){
             Log::error($e->getMessage());
-            return redirect()->route('categories.index')->with('error', $e->getMessage());
+            return redirect()->route('products.index')->with('error', $e->getMessage());
         }
 
-        return redirect()->route('categories.index')->with('success', 'Created Data');
-
+        return redirect()->route('products.index')->with('success', 'Created Data');
     }
 
     /**
@@ -72,7 +76,6 @@ class CategoryController extends Controller
     public function show($id)
     {
         dd("Show");
-        //
     }
 
     /**
@@ -83,9 +86,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $data = Category::find($id);
-        return view('category.edit', compact('data'));
-
+        $data = Product::find($id);
+        $categories  = Category::all()->pluck('category_name','id');
+        return view('product.edit', compact('data','categories'));
     }
 
     /**
@@ -98,23 +101,10 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $input = $request->all();
-        $data = Category::where('id', $id)->first();
-        $file_name = "";
-        // $file_name = $data->image;
-        if($request->hasFile('image')){
-            $file = $request->file('image'); // Retrieve the uploaded file from the request
-            $file_name = $file->getClientOriginalName(); // Retrieve the original file_name
+        $data = Product::where('id', $id)->first();
 
-            Storage::disk('public')->put('upload/'.$file_name, file_get_contents($file));
-        };
-
-        if($file_name){
-            $input['image']=$file_name;
-        }
         $data->update($input);
         return redirect()->back()->with('success', 'Updated Data');
-
-
     }
 
     /**
