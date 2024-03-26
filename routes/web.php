@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SignupController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,3 +31,9 @@ Route::get('/', function () {
 
 Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
+
+Route::get('signup',[SignupController::class, 'create'])->name('signup.create');
+Route::post('signup', [SignupController::class, 'store'])->name('signup.store');
+
+Route::get('login',[LoginController::class, 'index'])->name('login.index');
+Route::post('login', [LoginController::class, 'login'])->name('login.login');

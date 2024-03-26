@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,16 +21,25 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $input  = $request->all();
-        $user = User::where('email',$input->email)->where('password',$input->password)->first();
-        dd($user);
-        if($user)
-        {
-            session()->put('id',$user->id);
+        $input  = $request->only('email','password');
+        // $credentials = [
+        //     'email' => $request['email'],
+        //     'password' => $request['password'],
+        // ];
+
+        if(Auth::attempt($input)) {
+            return redirect()->route('dashboard');
         }
-        else{
-             return redirect()->back()->with('error', 'Email or Password is incorrect');
-        }    }
+        return redirect()->back()->with('error', 'Email or Password is incorrect');
+        // $user = User::where('email',$input->email)->where('password',$input->password)->first();
+        // dd($user);
+        // if($user)
+        // {
+        //     session()->put('id',$user->id);
+        // }
+        // else{
+        // }
+    }
 
     // public function __invoke(LoginRequest $request)
     // {
